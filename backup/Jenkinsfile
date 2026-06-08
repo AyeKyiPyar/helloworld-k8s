@@ -1,0 +1,52 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_REGISTRY = "https://github.com/AyeKyiPyar/hello-k8s.git"
+        IMAGE_NAME = "helloworld-service"
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Docker Build & Push') {
+            steps {
+                script {
+                    def timestamp = sh(script: "date +%Y%m%d%H%M%S", returnStdout: true).trim()
+                    def imageTag = "${DOCKER_REGISTRY}/${IMAGE_NAME}:${timestamp}"
+                    sh "docker build -t ${imageTag} ."
+                    sh "docker push ${imageTag}"
+                    env.IMAGE_TAG = imageTag
+                }
+            }
+        }
+
+        stage('Deploy to Staging') {
+            steps {
+                script {
+                    // Replace with your Kubernetes deployment
+                    sh """
+                    kubectl set image deployment/helloworld-deployment helloworld=${env.IMAGE_TAG} --record
+                    kubectl rollout status deployment/helloworld-deployment
+                    """
+                }
+            }
+        }
+
+        stage('Performance Testing') {
+            steps {
+                sh './performance-test.sh'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished'
+        }
+    }
+}

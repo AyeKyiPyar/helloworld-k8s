@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hellowrold-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hellowrold-service
+  template:
+    metadata:
+      labels:
+        app: hellowrold-service
+        label: label
+    spec:
+      containers:
+      - name: hellowrold-service
+        image: kyipyar/hellowrold-service:1.0
+        ports:
+        - containerPort: 8080
+# 👉 PUT env HERE (inside container)
+        env:
+        - name: SERVER_SERVLET_CONTEXT_PATH
+          value: "/hellowrold-service"
+        - name: SPRINGDOC_API_DOCS_PATH
+          value: "/hellowrold-service/v3/api-docs"
+        - name: SPRINGDOC_SWAGGER_UI_PATH
+          value: "/swagger-ui.html"
