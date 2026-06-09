@@ -55,11 +55,8 @@ pipeline {
 		stage('Deploy to STAGE') {
             steps {
                 withCredentials([
-                    file(
-                        credentialsId: 'stage-kubeconfig',
-                        variable: 'KUBECONFIG'
-                    )
-                ]) {
+                    string(credentialsId: 'stage-kubeconfig', variable: 'KUBECONFIG_CONTENT')
+                ]){
                     sh '''
 					kubectl config use-context kind-helloworld-stage
                     kubectl config current-context
