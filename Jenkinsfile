@@ -17,8 +17,8 @@ pipeline {
 
         stage('Checkout Source') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/AyeKyiPyar/hello-k8s.git'
+                git branch: 'master',
+                    url: 'https://github.com/AyeKyiPyar/helloworld-k8s.git'
             }
         }
 
