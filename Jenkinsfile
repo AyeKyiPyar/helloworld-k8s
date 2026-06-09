@@ -60,7 +60,7 @@ pipeline {
                     sh '''
 					kubectl config use-context kind-helloworld-stage
                     kubectl config current-context
-            		kubectl apply -f deployment.yaml --server=https://helloworld-stage-control-plane:6443 --insecure-skip-tls-verify=true
+            		kubectl apply -f deployment.yaml --insecure-skip-tls-verify=true
                    	kubectl apply -f service.yaml --validate=false --insecure-skip-tls-verify=true
                     '''
                 }
