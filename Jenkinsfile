@@ -56,12 +56,12 @@ pipeline {
             steps {
                 withCredentials([
                     file(
-                        credentialsId: 'kubeconfig-stage',
+                        credentialsId: 'stage-kubeconfig',
                         variable: 'KUBECONFIG'
                     )
                 ]) {
                     sh '''
-					kubectl config use-context kind-calculator-stage
+					kubectl config use-context kind-helloworld-stage
                     kubectl config current-context
             		kubectl apply -f deployment.yaml --server=https://helloworld-stage-control-plane:6443 --insecure-skip-tls-verify=true
                    	kubectl apply -f service.yaml --validate=false --insecure-skip-tls-verify=true
