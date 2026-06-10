@@ -1,38 +1,36 @@
+```bash
 #!/bin/bash
 
 URL="http://localhost:8080/hello"
-TOTAL_REQUESTS=100
-THRESHOLD=1.0  # 1 second
+REQUESTS=100
+TOTAL_TIME=0
 
-echo "Running $TOTAL_REQUESTS requests to $URL ..."
+echo "Running $REQUESTS requests to $URL ..."
 
-# Run 100 requests and store times
-times=()
-for i in $(seq 1 $TOTAL_REQUESTS)
+for i in $(seq 1 $REQUESTS)
 do
-    start=$(date +%s.%N)
-    curl -s $URL > /dev/null
-    end=$(date +%s.%N)
-    diff=$(echo "$end - $start" | bc)
-    times+=($diff)
+    # Measure response time in seconds
+    RESPONSE_TIME=$(curl -o /dev/null -s -w "%{time_total}" $URL)
+
+    echo "Request $i: ${RESPONSE_TIME}s"
+
+    # Add response time
+    TOTAL_TIME=$(awk "BEGIN {print $TOTAL_TIME + $RESPONSE_TIME}")
 done
 
 # Calculate average
-sum=0
-for t in "${times[@]}"
-do
-    sum=$(echo "$sum + $t" | bc)
-done
-avg=$(echo "$sum / $TOTAL_REQUESTS" | bc -l)
+AVERAGE=$(awk "BEGIN {print $TOTAL_TIME / $REQUESTS}")
 
-echo "Average response time: $avg seconds"
+echo "--------------------------------"
+echo "Average response time: ${AVERAGE}s"
 
-# Check threshold
-result=$(echo "$avg < $THRESHOLD" | bc)
-if [ $result -eq 1 ]; then
-    echo "Performance test PASSED"
+# Check performance
+if awk "BEGIN {exit !($AVERAGE < 1)}"
+then
+    echo "✅ Performance Test PASSED (Average < 1 second)"
     exit 0
 else
-    echo "Performance test FAILED"
+    echo "❌ Performance Test FAILED (Average >= 1 second)"
     exit 1
 fi
+```
