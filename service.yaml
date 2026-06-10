@@ -5,7 +5,7 @@ metadata:
 spec:
   type: NodePort                # exposes the app on a port on all nodes
   selector:
-    app: calculator            # matches the Deployment pods
+    app: helloworld-service            # matches the Deployment pods
   ports:
     - protocol: TCP
       port: 8080              # port inside the cluster
