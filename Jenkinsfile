@@ -69,7 +69,10 @@ pipeline {
 
        stage('Performance Testing') {
             steps {
-                sh './performance-test.sh'
+                sh '''
+                    chmod +x performance-test.sh
+                    ./performance-test.sh
+                '''
             }
         }
     }
