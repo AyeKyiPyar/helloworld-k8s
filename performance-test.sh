@@ -1,4 +1,3 @@
-```bash
 #!/bin/bash
 
 URL="http://localhost:8080/hello"
@@ -33,4 +32,4 @@ else
     echo "❌ Performance Test FAILED (Average >= 1 second)"
     exit 1
 fi
-```
+
